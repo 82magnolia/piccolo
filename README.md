@@ -13,6 +13,8 @@ Comping soon!
 
 ## Downloading OmniScenes
 OmniScenes is our newly collected dataset for evaluating omnidirectional localization in diverse scenearios such as robot-mounted/handheld cameras and scenes with changes.
+
+[<img src="omniscenes.png" width="700"/>](omniscenes.png)\
 The dataset is comprised of images and point clouds captured from 7 scenes ranging from wedding halls to hotel rooms.
 We are currently in the process of removing regions in the dataset that contains private information difficult to be released in public.
 We will notify further updates through this GitHub repository.
