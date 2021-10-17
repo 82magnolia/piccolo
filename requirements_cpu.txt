@@ -1,0 +1,13 @@
+torch==1.7.0+cpu
+torchvision==0.8.1+cpu
+numpy
+open3d
+scipy
+matplotlib
+tensorflow-cpu
+tqdm
+pyyaml
+opencv-python
+pandas
+Pillow
+kornia
