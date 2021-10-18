@@ -8,9 +8,6 @@ PICCOLO is a simple, efficient algorithm for omnidirectional localization that e
 In this repository, we provide the implementation and instructions for running PICCOLO, along with the accompanying OmniScenes dataset. 
 If you have any questions regarding the dataset or the baseline implementations, please leave an issue or contact 82magnolia@snu.ac.kr.
 
-## Demo
-Comping soon!
-
 ## Running PICCOLO
 ### Dataset Preparation
 First, download the [Stanford2D-3D-S Dataset](https://github.com/alexsax/2D-3D-Semantics), and place the data in the directory structure below.
