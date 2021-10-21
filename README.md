@@ -10,7 +10,7 @@ If you have any questions regarding the dataset or the baseline implementations,
 
 ## Running PICCOLO
 ### Dataset Preparation
-First, download the [Stanford2D-3D-S Dataset](https://github.com/alexsax/2D-3D-Semantics), and place the data in the directory structure below.
+First, download the [S3DIS dataset](http://buildingparser.stanford.edu/dataset.html#Download), and place the data in the directory structure below.
 
     piccolo/data
     └── stanford (Stanford2D-3D-S Dataset)
