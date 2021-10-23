@@ -77,9 +77,23 @@ After running, four files will be in the log directory.
 
 
 ## Downloading OmniScenes
-OmniScenes is our newly collected dataset for evaluating omnidirectional localization in diverse scenearios such as robot-mounted/handheld cameras and scenes with changes.
+OmniScenes is our newly collected dataset for evaluating omnidirectional localization in diverse scenarios such as robot-mounted/handheld cameras and scenes with changes.
 
 [<img src="omniscenes.png" width="700"/>](omniscenes.png)\
 The dataset is comprised of images and point clouds captured from 7 scenes ranging from wedding halls to hotel rooms.
 We are currently in the process of removing regions in the dataset that contains private information difficult to be released in public.
 We will notify further updates through this GitHub repository.
+
+## Citation
+If you find this repository useful, please cite
+
+```bibtex
+@InProceedings{Kim_2021_ICCV,
+    author    = {Kim, Junho and Choi, Changwoon and Jang, Hojun and Kim, Young Min},
+    title     = {PICCOLO: Point Cloud-Centric Omnidirectional Localization},
+    booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+    month     = {October},
+    year      = {2021},
+    pages     = {3313-3323}
+}
+```
