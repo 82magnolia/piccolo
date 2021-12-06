@@ -81,8 +81,11 @@ OmniScenes is our newly collected dataset for evaluating omnidirectional localiz
 
 [<img src="omniscenes.png" width="700"/>](omniscenes.png)\
 The dataset is comprised of images and point clouds captured from 7 scenes ranging from wedding halls to hotel rooms.
-We are currently in the process of removing regions in the dataset that contains private information difficult to be released in public.
-We will notify further updates through this GitHub repository.
+
+To download OmniScenes, use the following [DropBox link](https://www.dropbox.com/s/6fue3dk90goc7cf/omniscenes_ver_1_1_release.zip?dl=0).
+The ground-truth poses are saved as a .txt file for each query panorama image.
+To transform the point cloud under each ground-truth pose, please use the following equation: `X = R(X - t)`. 
+If you have any additional questions with OmniScenes, please email 82magnolia@snu.ac.kr.
 
 ## Citation
 If you find this repository useful, please cite
