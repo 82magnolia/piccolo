@@ -84,7 +84,8 @@ The dataset is comprised of images and point clouds captured from 7 scenes rangi
 
 To download OmniScenes, use the following [DropBox link](https://www.dropbox.com/s/6fue3dk90goc7cf/omniscenes_ver_1_1_release.zip?dl=0).
 The ground-truth poses are saved as a .txt file for each query panorama image.
-To transform the point cloud under each ground-truth pose, please use the following equation: `X = R(X - t)`. 
+To transform the point cloud under each ground-truth pose, please use the following equation: `X = R(X - t)`.
+
 If you have any additional questions with OmniScenes, please email 82magnolia@snu.ac.kr.
 
 ## Citation
