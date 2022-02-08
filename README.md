@@ -82,7 +82,7 @@ OmniScenes is our newly collected dataset for evaluating omnidirectional localiz
 [<img src="omniscenes.png" width="700"/>](omniscenes.png)\
 The dataset is comprised of images and point clouds captured from 7 scenes ranging from wedding halls to hotel rooms.
 
-To download OmniScenes, use the following [Google Drive link](https://drive.google.com/file/d/1B2b49eIboJrH9dGxqBnQJnxJbWStVpcS/view?usp=sharing).
+To download OmniScenes, use the following [DropBox link](https://www.dropbox.com/s/ltjex3h598sat8a/omniscenes_ver_1_1_release.zip?dl=0).
 The ground-truth poses are saved as a .txt file for each query panorama image.
 To transform the point cloud under each ground-truth pose, please use the following equation: `X = R(X - t)`.
 
