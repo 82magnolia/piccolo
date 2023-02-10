@@ -76,13 +76,16 @@ After running, four files will be in the log directory.
 * Tensorboard file containing the accuracy
 
 
-## Downloading OmniScenes
+## Downloading OmniScenes (Update: New Scenes Added!)
 OmniScenes is our newly collected dataset for evaluating omnidirectional localization in diverse scenarios such as robot-mounted/handheld cameras and scenes with changes.
+
+:star2: **Update** :star2: We are releasing a new version of OmniScenes with more scenes added! Please see below for download instructions.
 
 [<img src="omniscenes.png" width="700"/>](omniscenes.png)\
 The dataset is comprised of images and point clouds captured from 7 scenes ranging from wedding halls to hotel rooms.
 
-To download OmniScenes, use the following [DropBox link](https://www.dropbox.com/s/ltjex3h598sat8a/omniscenes_ver_1_1_release.zip?dl=0).
+To download the OmniScenes dataset (original), use the following [DropBox link](https://www.dropbox.com/s/ltjex3h598sat8a/omniscenes_ver_1_1_release.zip?dl=0).
+To download the OmniScenes dataset (new), use the following [Google Drive link](https://drive.google.com/file/d/1bdXHkVdW09AJOdE80FVNg0nW-iRoVIFS/view?usp=share_link).
 The ground-truth poses are saved as a .txt file for each query panorama image.
 To transform the point cloud under each ground-truth pose, please use the following equation: `X = R(X - t)`.
 
