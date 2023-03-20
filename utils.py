@@ -398,7 +398,7 @@ def generate_trans_points(xyz, init_dict=None, device='cpu'):
             return x_points, y_points
 
     if init_dict['xy_only']:
-        if init_dict['dataset'] == 'Stanford2D-3D-S' or init_dict['dataset'] == 'Matterport3D' or init_dict['dataset'] == 'hoam':
+        if init_dict['dataset'] == 'Stanford2D-3D-S' or init_dict['dataset'] == 'OmniScenes':
             num_trans_x, num_trans_y = adaptive_trans_num(xyz, init_dict['num_trans'], xy_only=True)
             trans_arr = torch.zeros(num_trans_x * num_trans_y, 3, device=device)
 
@@ -407,41 +407,14 @@ def generate_trans_points(xyz, init_dict=None, device='cpu'):
             trans_arr[:, :2] = torch.stack([trans_coords[0].reshape(-1), trans_coords[1].reshape(-1)], dim=0).t()
             trans_arr[:, 2] = xyz[:, 2].mean()
 
-        elif init_dict['dataset'] == 'MPO':
-            num_trans_x, num_trans_y = adaptive_trans_num(xyz, init_dict['num_trans'], xy_only=True)
-            num_trans_z = 3
-            trans_arr = torch.zeros((num_trans_x * num_trans_y * num_trans_z, 3), dtype=torch.float, device=device)
-
-            x_points, y_points = get_starting_points(num_trans_x, num_trans_y)
-            z_min, z_max = quantile(xyz[:, 2], 0.05)
-            z_mean = xyz[:, 2].mean()
-            z_3 = torch.tensor([z_mean + (z_max - z_mean) / 2, z_mean, z_mean - (z_mean - z_min) / 2], dtype=torch.float, device=device)
-
-            for i in range(num_trans_x * num_trans_y * num_trans_z):
-                trans_arr[i] = torch.tensor([x_points[i // (num_trans_y * num_trans_z)],
-                                        y_points[(i % (num_trans_y * num_trans_z)) // num_trans_z],
-                                        z_3[(i % (num_trans_y * num_trans_z)) % num_trans_z]], dtype=torch.float, device=device)
-
-        elif init_dict['dataset'] == 'Data61/2D3D':
-            num_trans_x, num_trans_y = adaptive_trans_num(xyz, init_dict['num_trans'], xy_only=True)
-            trans_arr = torch.zeros((num_trans_x * num_trans_y, 3), dtype=torch.float)
-
-            x_points, y_points = get_starting_points(num_trans_x, num_trans_y)
-            z_val = xyz[:, 2].median() + 1.7
-
-            for i in range(num_trans_x * num_trans_y):
-                trans_arr[i] = torch.tensor([x_points[i % num_trans_x], y_points[i // num_trans_x], z_val],
-                                        dtype=torch.float, device=device)
-
-    else:
-        if init_dict['trans_init_mode'] == 'octree':
-            trans_arr = generate_octree(xyz, device)
         else:
-            num_trans_x, num_trans_y, num_trans_z = adaptive_trans_num(xyz, init_dict['num_trans'], xy_only=False)
-            x_points, y_points, z_points = get_starting_points(num_trans_x, num_trans_y, num_trans_z)
+            raise NotImplementedError("Other datasets not supported")
+    else:
+        num_trans_x, num_trans_y, num_trans_z = adaptive_trans_num(xyz, init_dict['num_trans'], xy_only=False)
+        x_points, y_points, z_points = get_starting_points(num_trans_x, num_trans_y, num_trans_z)
 
-            trans_coords = torch.meshgrid(x_points, y_points, z_points)
-            trans_arr = torch.stack([trans_coords[0].reshape(-1), trans_coords[1].reshape(-1), trans_coords[2].reshape(-1)], dim=0).t()
+        trans_coords = torch.meshgrid(x_points, y_points, z_points)
+        trans_arr = torch.stack([trans_coords[0].reshape(-1), trans_coords[1].reshape(-1), trans_coords[2].reshape(-1)], dim=0).t()
 
     return trans_arr
 

@@ -133,3 +133,50 @@ def obtain_gt_stanford(area_num: Union[int, str], img_name: str) -> Tuple[np.arr
         gt_trans = np.matmul(rot_mat, gt_trans - trans_mat)
 
     return gt_trans, gt_rot
+
+
+def read_omniscenes(filepath: str, sample_rate: float = 1) -> Tuple[np.array, np.array]:
+    """
+    Read OmniScenes dataset point cloud data from filepath
+    Args:
+        filepath: full path name
+        sample_rate: point cloud sampling rate (at least 1)
+    Returns:
+        xyz: (N / sample_rate, 3) numpy array containing xyz coordinates of the point cloud data
+        rgb: (N / sample_rate, 3) numpy array containing rgb values of the point cloud data, in range of [0, 1]
+    """
+
+    # read file
+    data = read_table(filepath, header=None, delim_whitespace=True).values
+
+    xyz = data[:, :3]
+    rgb = data[:, 3:] / 255.
+
+    # sampleing point cloud
+    if sample_rate > 1.0:
+        perm = np.random.permutation(xyz.shape[0])
+        num_samples = int(xyz.shape[0] / sample_rate)
+        idx = perm[:num_samples]
+        xyz = xyz[idx]
+        rgb = rgb[idx]
+
+    return xyz, rgb
+
+
+def obtain_gt_omniscenes(full_img_path: str) -> Tuple[np.array, np.array]:
+    """
+    Obtain OmniScenes dataset ground truth translation & rotation
+    Args:
+        img_name: panorama image name
+    
+    Returns:
+        gt_trans: (3, 1) numpy array containing gound truth translation
+        gt_rot: (3, 3) numpy array containing ground truth rotation
+    """
+
+    pose_file = full_img_path.replace('pano', 'pose').replace('.jpg', '.txt')
+    gt_mat = np.loadtxt(pose_file)
+    gt_rot = gt_mat[:, :3]
+    gt_trans = gt_mat[:, 3:]
+
+    return gt_trans, gt_rot

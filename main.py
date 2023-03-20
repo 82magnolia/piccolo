@@ -62,5 +62,7 @@ if __name__ == '__main__':
     dataset = cfg.dataset
     if dataset == 'Stanford2D-3D-S':
         localize.localize_stanford(cfg, writer, log_dir)
+    elif dataset == 'OmniScenes':
+        localize.localize_omniscenes(cfg, writer, log_dir)
     else:
         raise ValueError
