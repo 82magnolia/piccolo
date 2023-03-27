@@ -142,3 +142,93 @@ def histogram_intersection(hist_1: torch.Tensor, hist_2: torch.Tensor) -> float:
         intersection = intersection.sum(dim=-1)  # (B, )
     
     return intersection
+
+def color_match(img: torch.Tensor, rgb: torch.Tensor) -> torch.Tensor:
+    """
+    Match the color of the image and point cloud to further enhance pose estimation quality
+
+    Args:
+        img: (H, W, 3) torch tensor containing image RGB values
+        rgb: (N, 3) torch tensor containing point cloud RGB values
+
+    Returns:
+        img: (H, W, 3) torch tensor containing modified image RGB values
+    """
+
+    def _interp(x, xp, fp, period=360):
+        """
+        Linear interpolation for monotonically increasing sample points.
+
+        Returns the linear interpolant to a function
+        with given discrete data points (`xp`, `fp`), evaluated at `x`.
+        """
+
+        asort_xp = torch.argsort(xp)
+        xp = xp[asort_xp]
+        fp = fp[asort_xp]
+
+        xp = torch.cat([xp[-1:] - period, xp, xp[0:1] + period])
+        fp = torch.cat([fp[-1:], fp, fp[0:1]])
+
+        interpolant = torch.zeros_like(x)
+
+        for i in range(len(x)):
+            big_ind = len(xp) - (x[i:i+1] < xp).sum()
+            small_ind = big_ind - 1
+
+            inds = torch.arange(x.shape[0])
+            interpolant[i] = ((x[i] - xp[small_ind]) * fp[big_ind] + (xp[big_ind] - x[i]) * fp[small_ind]) / (xp[big_ind] - xp[small_ind])
+
+        return interpolant
+
+
+    def _match_cumulative_cdf(source, template, weight):
+        """
+        Return modified source array so that the cumulative density function of
+        its values matches the cumulative density function of the template.
+        """
+
+        src_values, src_unique_indices = torch.unique(source, return_inverse=True, sorted=True)
+        tmp_values, tmp_counts = torch.unique(template, return_counts=True, sorted=True)
+        src_counts = torch.bincount((source * 255).int(), weight)
+        # caculate normalized quantiles for each array
+        src_quantiles = torch.cumsum(src_counts, 0)
+        src_quantiles = src_quantiles / src_quantiles[-1]
+        tmp_quantiles = torch.cumsum(tmp_counts, 0) / len(template)
+
+        interp_a_values = _interp(src_quantiles, tmp_quantiles, tmp_values)
+
+        return interp_a_values[src_unique_indices].reshape(source.shape)
+
+
+    def match_histograms(image, reference, weight):
+        """
+        Adjust an image so that its cumulative histogram matches that of another.
+        The adjustment is applied separately for each channel.
+        """
+        matched = torch.empty(image.shape).to(image.device)
+        for channel in range(image.shape[-1]):
+            matched_channel = _match_cumulative_cdf(image[..., channel], reference[..., channel], weight)
+            matched[..., channel] = matched_channel
+        
+        return matched
+
+    orig_device = img.device
+    # Process image first
+    H, W, _ = img.shape
+
+    h_inds = torch.tensor([i for i in range(H) for _ in range(W)]).float().to(orig_device)
+    sin_weight = torch.sin(h_inds / H * np.pi)
+
+    img = img.clone().detach().reshape(-1, 3)
+    tgt_img = img[(img * 255).long().sum(-1) > 0]
+    tgt_sin_weight = sin_weight[(img * 255).long().sum(-1) > 0]
+
+    # Match image with respect to point cloud
+    # mod_img = match_histograms(tgt_img.cpu().numpy(), rgb.cpu().numpy(), multichannel=True)
+    mod_img = match_histograms(tgt_img, rgb, tgt_sin_weight)
+
+    img[(img * 255).long().sum(-1) > 0] = mod_img.clone().detach()
+    img = img.reshape(H, W, 3)
+
+    return img

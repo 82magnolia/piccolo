@@ -294,8 +294,8 @@ def adaptive_trans_num(xyz: torch.Tensor, max_trans_num: int, xy_only: bool = Fa
         num_start_trans_z: number of z coordinate translation candidates, only returned when xy_only is False
     """
 
-    xyz_max = xyz.max(dim=0)[0]
-    xyz_min = xyz.min(dim=0)[0]
+    xyz_max = torch.quantile(xyz, dim=0, q=0.90)
+    xyz_min = torch.quantile(xyz, dim=0, q=0.10)
     xyz_length = xyz_max - xyz_min
 
     if xy_only:
@@ -378,20 +378,20 @@ def generate_trans_points(xyz, init_dict=None, device='cpu'):
             y_points = (torch.arange(num_trans_y, device=device) + 1) / (num_trans_y + 1) * (xyz[:, 1].max() - xyz[:, 1].min()) + xyz[:, 1].min()
             if num_trans_z is not None:
                 z_points = (torch.arange(num_trans_z, device=device) + 1) / (num_trans_z + 1) * (xyz[:, 2].max() - xyz[:, 2].min()) + xyz[:, 2].min()
-
-        elif init_dict['trans_init_mode'] == 'quantile':
-            x_points = torch.quantile(xyz[:, 0],
-                                      (torch.arange(num_trans_x, device=device) + 1) / (num_trans_x + 1))
-            y_points = torch.quantile(xyz[:, 1],
-                                      (torch.arange(num_trans_y, device=device) + 1) / (num_trans_y + 1))
-            if num_trans_z is not None:
-                z_points = torch.quantile(xyz[:, 2], (torch.arange(num_trans_z, device=device) + 1) / (num_trans_z + 1))
-
         elif init_dict['trans_init_mode'] == 'manual':
             x_points = (torch.arange(num_trans_x, device=device)) / (num_trans_x - 1) * (init_dict['x_max'] - init_dict['x_min']) + init_dict['x_min']
             y_points = (torch.arange(num_trans_y, device=device)) / (num_trans_y - 1) * (init_dict['y_max'] - init_dict['y_min']) + init_dict['y_min']
             if num_trans_z is not None:
                 z_points = (torch.arange(num_trans_z, device=device)) / (num_trans_z - 1) * (init_dict['z_max'] - init_dict['z_min']) + init_dict['z_min']
+        else:  # Default is quantile
+            split_x = (torch.arange(num_trans_x, device=device) + 1) / (num_trans_x + 1) if 1 / (num_trans_x + 1) > 0.1 else torch.linspace(0.1, 0.9, num_trans_x, device=device)
+            split_y = (torch.arange(num_trans_y, device=device) + 1) / (num_trans_y + 1) if 1 / (num_trans_y + 1) > 0.1 else torch.linspace(0.1, 0.9, num_trans_y, device=device)
+            x_points = torch.quantile(xyz[:, 0], split_x)
+            y_points = torch.quantile(xyz[:, 1], split_y)
+            if num_trans_z is not None:
+                split_z = (torch.arange(num_trans_z, device=device) + 1) / (num_trans_z + 1) if 1 / (num_trans_z + 1) > 0.1 else torch.linspace(0.1, 0.9, num_trans_z, device=device)
+                z_points = torch.quantile(xyz[:, 2], split_z)
+
         if num_trans_z is not None:
             return x_points, y_points, z_points
         else:
@@ -405,7 +405,10 @@ def generate_trans_points(xyz, init_dict=None, device='cpu'):
             x_points, y_points = get_starting_points(num_trans_x, num_trans_y)
             trans_coords = torch.meshgrid(x_points, y_points)
             trans_arr[:, :2] = torch.stack([trans_coords[0].reshape(-1), trans_coords[1].reshape(-1)], dim=0).t()
-            trans_arr[:, 2] = xyz[:, 2].mean()
+            if init_dict['z_prior'] is not None:
+                trans_arr[:, 2] = init_dict['z_prior']
+            else:
+                trans_arr[:, 2] = xyz[:, 2].mean()
 
         else:
             raise NotImplementedError("Other datasets not supported")

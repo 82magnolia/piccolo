@@ -9,7 +9,7 @@ from torch.utils.tensorboard import SummaryWriter
 from glob import glob
 from typing import NamedTuple
 from collections import defaultdict
-from color_utils import color_mod
+from color_utils import color_mod, color_match
 from utils import *
 import data_utils
 from omniloc import omniloc, sampling_loss, omniloc_batch
@@ -393,11 +393,15 @@ def localize_omniscenes(cfg: NamedTuple, writer: torch.utils.tensorboard.Summary
             orig_img[orig_img > 255] = 255
 
         sharpen_color = getattr(cfg, 'sharpen_color', False)
+        match_color = getattr(cfg, 'match_color', False)
         num_bins = getattr(cfg, 'num_bins', 256)
         
         # Color modulation
         mod_img = torch.from_numpy(orig_img).float() / 255.
         mod_img = mod_img.to(device)
+        if match_color:
+            new_img = color_match(mod_img, rgb)
+            orig_img = (255 * new_img.cpu().numpy()).astype(np.uint8)
         if sharpen_color:
             if past_pcd_name == pcd_name:
                 rgb = torch.from_numpy(rgb_np).float()
