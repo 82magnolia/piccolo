@@ -36,6 +36,8 @@ First, download the [S3DIS dataset](http://buildingparser.stanford.edu/dataset.h
             └── area_6
                 └── *.json
 
+Note, to obtain results in OmniScenes, please refer to the download instructions [below](https://github.com/82magnolia/piccolo#downloading-omniscenes-update-new-scenes-added).
+
 ### Installation
 To run the codebase, you need [Anaconda](https://www.anaconda.com/). Once you have Anaconda installed, run the following command to create a conda environment.
 
