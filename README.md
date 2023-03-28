@@ -10,7 +10,8 @@ If you have any questions regarding the dataset or the baseline implementations,
 
 ## Running PICCOLO
 ### Dataset Preparation
-First, download the [S3DIS dataset](http://buildingparser.stanford.edu/dataset.html#Download), and place the data in the directory structure below.
+First ownload the panorama images (`pano`) and poses (`pose`) from the following [link](https://docs.google.com/forms/d/e/1FAIpQLScFR0U8WEUtb7tgjOhhnl31OrkEs73-Y8bQwPeXgebqVKNMpQ/viewform?c=0&w=1) (download the one without `XYZ`) and the point cloud (`pcd_not_aligned`) from the following [link](https://docs.google.com/forms/d/e/1FAIpQLScDimvNMCGhy_rmBA2gHfDu3naktRm6A8BPwAWWDv-Uhm6Shw/viewform?c=0&w=1).
+Then, place the data in the directory structure below.
 
     piccolo/data
     └── stanford (Stanford2D-3D-S Dataset)
