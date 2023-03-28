@@ -38,6 +38,32 @@ Then, place the data in the directory structure below.
                 └── *.json
 
 Note, to obtain results in OmniScenes, please refer to the download instructions [below](https://github.com/82magnolia/piccolo#downloading-omniscenes-update-new-scenes-added).
+Then, place the data in the directory structure below.
+
+    piccolo/data
+    └── omniscenes (OmniScenes Dataset)
+        ├── change_handheld_pano (panorama images)
+        │   ├── handheld_pyebaekRoom_1_scene_2 (scene folder)
+        │   │  └── *.jpg
+        │   ⋮
+        │   │
+        │   └── handheld_weddingHall_1_scene_2 (scene folder)
+        │       └── *.jpg
+        └── change_handheld_pose (json files containing ground truth camera pose)
+        |   ├── handheld_pyebaekRoom_1_scene_2 (scene folder)
+        |   │   └── *.json
+        |   ⋮
+        |   │
+        |   └── handheld_pyebaekRoom_1_scene_2 (scene folder)
+        |       └── *.json
+        ⋮
+        └── pcd (point cloud data)
+            ├── pyebaekRoom_1.txt
+            │
+            ⋮
+            │
+            └── weddingHall_1.txt
+
 
 ### Installation
 To run the codebase, you need [Anaconda](https://www.anaconda.com/). Once you have Anaconda installed, run the following command to create a conda environment.
