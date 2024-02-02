@@ -1,5 +1,5 @@
 # PICCOLO: Point-Cloud Centric Omnidirectional Localization
-:star2: **Update** :star2: Check out the [panoramic localization library](https://github.com/82magnolia/panoramic-localization), which contains implementations of numerous panoramic localization algorithms including PICCOLO. Plus, it is more user-friendly than this repositoty!
+:star2: **Update** :star2: Check out the [panoramic localization library](https://github.com/82magnolia/panoramic-localization), which contains implementations of numerous panoramic localization algorithms including PICCOLO. Plus, it is more user-friendly than this repository!
 
 Official PyTorch implementation of **PICCOLO: Point-Cloud Centric Omnidirectional Localization (ICCV 2021)** [[Paper]](https://openaccess.thecvf.com/content/ICCV2021/html/Kim_PICCOLO_Point_Cloud-Centric_Omnidirectional_Localization_ICCV_2021_paper.html) [[Video]](https://www.youtube.com/watch?v=E-_lEsChfoE).
 
